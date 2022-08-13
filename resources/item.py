@@ -29,7 +29,7 @@ class Item(Resource):
 
         data = Item.parser.parse_args()
 
-        item = ItemModel(name, data['price'], data['store_id'])
+        item = ItemModel(name, **data)
 
         try:
             item.save_to_db()
@@ -52,7 +52,7 @@ class Item(Resource):
         item = ItemModel.find_by_name(name)
 
         if item is None:
-            item = ItemModel(name, data['price'], data['store_id'])
+            item = ItemModel(name, **data)
         else:
             item.price = data['price']
 
@@ -63,5 +63,5 @@ class Item(Resource):
 
 class ItemList(Resource):
     def get(self):
-        return {'items': [item.json() for item in ItemModel.query.all()]}
+        return {'items': [item.json() for item in ItemModel.find_all()]}
         # return {'items': list(map(lambda  x: x.json(), ItemModel.query.all()))}
